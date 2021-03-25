@@ -16,16 +16,15 @@
 
 package org.springframework.expression.spel.support;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.core.MethodParameter;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.expression.MethodExecutor;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import org.springframework.core.MethodParameter;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.expression.MethodExecutor;
 
 class Spr7538Tests {
 
@@ -59,5 +58,6 @@ class Spr7538Tests {
 		}
 	}
 
-	static class Foo{}
+	static class Foo {
+	}
 }

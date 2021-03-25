@@ -32,9 +32,9 @@ import org.springframework.lang.Nullable;
  * This post-processor is therefore aligned with {@link AbstractAutoProxyCreator}.
  *
  * @author Juergen Hoeller
- * @since 4.2.3
  * @see AutoProxyUtils#shouldProxyTargetClass
  * @see AutoProxyUtils#determineTargetClass
+ * @since 4.2.3
  */
 @SuppressWarnings("serial")
 public abstract class AbstractBeanFactoryAwareAdvisingPostProcessor extends AbstractAdvisingBeanPostProcessor
@@ -47,7 +47,7 @@ public abstract class AbstractBeanFactoryAwareAdvisingPostProcessor extends Abst
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this.beanFactory = (beanFactory instanceof ConfigurableListableBeanFactory ?
-				(ConfigurableListableBeanFactory) beanFactory : null);
+				(ConfigurableListableBeanFactory)beanFactory : null);
 	}
 
 	@Override

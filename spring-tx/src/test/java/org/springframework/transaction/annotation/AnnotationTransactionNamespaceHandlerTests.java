@@ -16,16 +16,8 @@
 
 package org.springframework.transaction.annotation;
 
-import java.lang.management.ManagementFactory;
-import java.util.Collection;
-import java.util.Map;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -35,6 +27,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.config.TransactionManagementConfigUtils;
 import org.springframework.transaction.event.TransactionalEventListenerFactory;
 import org.springframework.transaction.testfixture.CallCountingTransactionManager;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -65,7 +63,7 @@ public class AnnotationTransactionNamespaceHandlerTests {
 	@Test
 	public void invokeTransactional() throws Exception {
 		TransactionalTestBean testBean = getTestBean();
-		CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean("transactionManager");
+		CallCountingTransactionManager ptm = (CallCountingTransactionManager)context.getBean("transactionManager");
 
 		// try with transactional
 		assertThat(ptm.begun).as("Should not have any started transactions").isEqualTo(0);
@@ -80,16 +78,16 @@ public class AnnotationTransactionNamespaceHandlerTests {
 		// try with exceptional
 		assertThatExceptionOfType(Throwable.class).isThrownBy(() ->
 				testBean.exceptional(new IllegalArgumentException("foo")))
-			.satisfies(ex -> {
-				assertThat(ptm.begun).as("Should have another started transaction").isEqualTo(2);
-				assertThat(ptm.rollbacks).as("Should have 1 rolled back transaction").isEqualTo(1);
-			});
+				.satisfies(ex -> {
+					assertThat(ptm.begun).as("Should have another started transaction").isEqualTo(2);
+					assertThat(ptm.rollbacks).as("Should have 1 rolled back transaction").isEqualTo(1);
+				});
 	}
 
 	@Test
 	public void nonPublicMethodsNotAdvised() {
 		TransactionalTestBean testBean = getTestBean();
-		CallCountingTransactionManager ptm = (CallCountingTransactionManager) context.getBean("transactionManager");
+		CallCountingTransactionManager ptm = (CallCountingTransactionManager)context.getBean("transactionManager");
 
 		assertThat(ptm.begun).as("Should not have any started transactions").isEqualTo(0);
 		testBean.annotationsOnProtectedAreIgnored();
@@ -111,7 +109,7 @@ public class AnnotationTransactionNamespaceHandlerTests {
 	}
 
 	private TransactionalTestBean getTestBean() {
-		return (TransactionalTestBean) context.getBean("testBean");
+		return (TransactionalTestBean)context.getBean("testBean");
 	}
 
 

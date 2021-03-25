@@ -17,7 +17,6 @@
 package org.springframework.aop.config;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +98,7 @@ class AopNamespaceHandlerScopeIntegrationTests {
 		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(oldRequest));
 		assertThat(requestScoped.getName()).isEqualTo(bram);
 
-		assertThat(((Advised) requestScoped).getAdvisors().length > 0).as("Should have advisors").isTrue();
+		assertThat(((Advised)requestScoped).getAdvisors().length > 0).as("Should have advisors").isTrue();
 	}
 
 	@Test
@@ -131,7 +130,7 @@ class AopNamespaceHandlerScopeIntegrationTests {
 		request.setSession(oldSession);
 		assertThat(sessionScoped.getName()).isEqualTo(bram);
 
-		assertThat(((Advised) sessionScoped).getAdvisors().length > 0).as("Should have advisors").isTrue();
+		assertThat(((Advised)sessionScoped).getAdvisors().length > 0).as("Should have advisors").isTrue();
 	}
 
 }

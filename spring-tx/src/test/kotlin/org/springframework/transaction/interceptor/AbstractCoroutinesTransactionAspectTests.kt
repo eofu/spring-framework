@@ -49,7 +49,8 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 	fun setup() {
 		getNameMethod = TestBean::class.java.getMethod("getName", Continuation::class.java)
 		setNameMethod = TestBean::class.java.getMethod("setName", String::class.java, Continuation::class.java)
-		exceptionalMethod = TestBean::class.java.getMethod("exceptional", Throwable::class.java, Continuation::class.java)
+		exceptionalMethod =
+			TestBean::class.java.getMethod("exceptional", Throwable::class.java, Continuation::class.java)
 	}
 
 	@Test
@@ -185,7 +186,8 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 	 * @param shouldRollback whether this should cause a transaction rollback
 	 */
 	protected fun doTestRollbackOnException(
-			ex: Exception, shouldRollback: Boolean, rollbackException: Boolean) {
+		ex: Exception, shouldRollback: Boolean, rollbackException: Boolean
+	) {
 		val txatt: TransactionAttribute = object : DefaultTransactionAttribute() {
 			override fun rollbackOn(t: Throwable): Boolean {
 				Assertions.assertThat(t).isSameAs(ex)
@@ -215,8 +217,7 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 		runBlocking {
 			try {
 				itb.exceptional(ex)
-			}
-			catch (actual: Exception) {
+			} catch (actual: Exception) {
 				if (rollbackException) {
 					Assertions.assertThat(actual).hasMessage(tex.message).isInstanceOf(tex::class.java)
 				} else {
@@ -250,15 +251,15 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 		val tb: DefaultTestBean = object : DefaultTestBean() {
 			override suspend fun getName(): String? {
 				throw UnsupportedOperationException(
-						"Shouldn't have invoked target method when couldn't create transaction for transactional method")
+					"Shouldn't have invoked target method when couldn't create transaction for transactional method"
+				)
 			}
 		}
 		val itb = advised(tb, rtm, tas) as TestBean
 		runBlocking {
 			try {
 				itb.getName()
-			}
-			catch (actual: Exception) {
+			} catch (actual: Exception) {
 				Assertions.assertThat(actual).isInstanceOf(CannotCreateTransactionException::class.java)
 			}
 		}
@@ -289,8 +290,7 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 		runBlocking {
 			try {
 				itb.setName(name)
-			}
-			catch (ex: Exception) {
+			} catch (ex: Exception) {
 				Assertions.assertThat(ex).isInstanceOf(RuntimeException::class.java)
 				Assertions.assertThat(ex.cause).hasMessage(ex.message).isInstanceOf(ex::class.java)
 			}
@@ -309,7 +309,11 @@ abstract class AbstractCoroutinesTransactionAspectTests {
 		}.block()
 	}
 
-	protected open fun advised(target: Any, rtm: ReactiveTransactionManager, tas: Array<TransactionAttributeSource>): Any {
+	protected open fun advised(
+		target: Any,
+		rtm: ReactiveTransactionManager,
+		tas: Array<TransactionAttributeSource>
+	): Any {
 		return advised(target, rtm, CompositeTransactionAttributeSource(*tas))
 	}
 

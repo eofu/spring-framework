@@ -16,11 +16,10 @@
 
 package org.springframework.transaction.interceptor;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.FatalBeanException;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -66,7 +65,7 @@ public class RollbackRuleTests {
 		RollbackRuleAttribute rr = new RollbackRuleAttribute(java.lang.Throwable.class.getName());
 		assertThat(rr.getDepth(new MyRuntimeException("")) > 0).isTrue();
 		assertThat(rr.getDepth(new IOException()) > 0).isTrue();
-		assertThat(rr.getDepth(new FatalBeanException(null,null)) > 0).isTrue();
+		assertThat(rr.getDepth(new FatalBeanException(null, null)) > 0).isTrue();
 		assertThat(rr.getDepth(new RuntimeException()) > 0).isTrue();
 	}
 
@@ -79,13 +78,13 @@ public class RollbackRuleTests {
 	@Test
 	public void ctorArgMustBeAThrowableClassWithNullThrowableType() {
 		assertThatIllegalArgumentException().isThrownBy(() ->
-				new RollbackRuleAttribute((Class<?>) null));
+				new RollbackRuleAttribute((Class<?>)null));
 	}
 
 	@Test
 	public void ctorArgExceptionStringNameVersionWithNull() {
 		assertThatIllegalArgumentException().isThrownBy(() ->
-				new RollbackRuleAttribute((String) null));
+				new RollbackRuleAttribute((String)null));
 	}
 
 	@Test

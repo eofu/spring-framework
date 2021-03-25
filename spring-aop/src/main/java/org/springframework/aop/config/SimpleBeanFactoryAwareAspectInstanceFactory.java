@@ -59,6 +59,7 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 
 	/**
 	 * Look up the aspect bean from the {@link BeanFactory} and returns it.
+	 *
 	 * @see #setAspectBeanName
 	 */
 	@Override
@@ -72,9 +73,8 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 	@Nullable
 	public ClassLoader getAspectClassLoader() {
 		if (this.beanFactory instanceof ConfigurableBeanFactory) {
-			return ((ConfigurableBeanFactory) this.beanFactory).getBeanClassLoader();
-		}
-		else {
+			return ((ConfigurableBeanFactory)this.beanFactory).getBeanClassLoader();
+		} else {
 			return ClassUtils.getDefaultClassLoader();
 		}
 	}
@@ -84,7 +84,7 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 		if (this.beanFactory != null && this.aspectBeanName != null &&
 				this.beanFactory.isSingleton(this.aspectBeanName) &&
 				this.beanFactory.isTypeMatch(this.aspectBeanName, Ordered.class)) {
-			return ((Ordered) this.beanFactory.getBean(this.aspectBeanName)).getOrder();
+			return ((Ordered)this.beanFactory.getBean(this.aspectBeanName)).getOrder();
 		}
 		return Ordered.LOWEST_PRECEDENCE;
 	}

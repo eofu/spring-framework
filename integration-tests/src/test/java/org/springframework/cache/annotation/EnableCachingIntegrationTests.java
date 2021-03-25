@@ -16,11 +16,7 @@
 
 package org.springframework.cache.annotation;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -32,6 +28,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -64,7 +63,7 @@ class EnableCachingIntegrationTests {
 		// in .integration-tests that it's not found.
 		assertThatExceptionOfType(Exception.class).isThrownBy(
 				ctx::refresh)
-			.withMessageContaining("AspectJCachingConfiguration");
+				.withMessageContaining("AspectJCachingConfiguration");
 	}
 
 
@@ -85,8 +84,13 @@ class EnableCachingIntegrationTests {
 	}
 
 
+	interface FooRepository {
+
+		List<Object> findAll();
+	}
+
 	@Configuration
-	@EnableCaching(proxyTargetClass=true)
+	@EnableCaching(proxyTargetClass = true)
 	static class ProxyTargetClassCachingConfig {
 
 		@Bean
@@ -94,7 +98,6 @@ class EnableCachingIntegrationTests {
 			return new NoOpCacheManager();
 		}
 	}
-
 
 	@Configuration
 	static class Config {
@@ -105,9 +108,8 @@ class EnableCachingIntegrationTests {
 		}
 	}
 
-
 	@Configuration
-	@EnableCaching(mode=AdviceMode.ASPECTJ)
+	@EnableCaching(mode = AdviceMode.ASPECTJ)
 	static class AspectJCacheConfig {
 
 		@Bean
@@ -115,13 +117,6 @@ class EnableCachingIntegrationTests {
 			return new NoOpCacheManager();
 		}
 	}
-
-
-	interface FooRepository {
-
-		List<Object> findAll();
-	}
-
 
 	@Repository
 	static class DummyFooRepository implements FooRepository {

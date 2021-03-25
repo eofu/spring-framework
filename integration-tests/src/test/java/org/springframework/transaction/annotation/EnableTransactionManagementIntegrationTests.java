@@ -16,26 +16,14 @@
 
 package org.springframework.transaction.annotation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
-import org.springframework.context.annotation.AdviceMode;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -43,6 +31,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
 import org.springframework.transaction.testfixture.CallCountingTransactionManager;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -99,8 +93,8 @@ class EnableTransactionManagementIntegrationTests {
 		// attempt was made to look up the AJ aspect. It's due to classpath issues
 		// in .integration-tests that it's not found.
 		assertThatExceptionOfType(Exception.class)
-			.isThrownBy(ctx::refresh)
-			.withMessageContaining("AspectJJtaTransactionManagementConfiguration");
+				.isThrownBy(ctx::refresh)
+				.withMessageContaining("AspectJJtaTransactionManagementConfiguration");
 	}
 
 	@Test
@@ -151,10 +145,15 @@ class EnableTransactionManagementIntegrationTests {
 		if (!AopUtils.isAopProxy(repo)) {
 			return false;
 		}
-		return Arrays.stream(((Advised) repo).getAdvisors())
+		return Arrays.stream(((Advised)repo).getAdvisors())
 				.anyMatch(BeanFactoryTransactionAttributeSourceAdvisor.class::isInstance);
 	}
 
+
+	interface FooRepository {
+
+		List<Object> findAll();
+	}
 
 	@Configuration
 	@EnableTransactionManagement
@@ -181,7 +180,6 @@ class EnableTransactionManagementIntegrationTests {
 		}
 	}
 
-
 	@Configuration
 	@EnableTransactionManagement
 	static class ImplicitTxManagerConfig {
@@ -196,7 +194,6 @@ class EnableTransactionManagementIntegrationTests {
 			return new DummyFooRepository();
 		}
 	}
-
 
 	@Configuration
 	@EnableTransactionManagement
@@ -223,7 +220,6 @@ class EnableTransactionManagementIntegrationTests {
 		}
 	}
 
-
 	@Configuration
 	@EnableTransactionManagement
 	static class DefaultTxManagerNameConfig {
@@ -233,7 +229,6 @@ class EnableTransactionManagementIntegrationTests {
 			return new DataSourceTransactionManager(dataSource);
 		}
 	}
-
 
 	@Configuration
 	@EnableTransactionManagement
@@ -245,7 +240,6 @@ class EnableTransactionManagementIntegrationTests {
 		}
 	}
 
-
 	@Configuration
 	@EnableTransactionManagement
 	static class NonConventionalTxManagerNameConfig {
@@ -256,9 +250,8 @@ class EnableTransactionManagementIntegrationTests {
 		}
 	}
 
-
 	@Configuration
-	@EnableTransactionManagement(proxyTargetClass=true)
+	@EnableTransactionManagement(proxyTargetClass = true)
 	static class ProxyTargetClassTxConfig {
 
 		@Bean
@@ -267,9 +260,8 @@ class EnableTransactionManagementIntegrationTests {
 		}
 	}
 
-
 	@Configuration
-	@EnableTransactionManagement(mode=AdviceMode.ASPECTJ)
+	@EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
 	static class AspectJTxConfig {
 
 		@Bean
@@ -277,7 +269,6 @@ class EnableTransactionManagementIntegrationTests {
 			return new DataSourceTransactionManager(dataSource);
 		}
 	}
-
 
 	@Configuration
 	static class Config {
@@ -292,17 +283,10 @@ class EnableTransactionManagementIntegrationTests {
 		@Bean
 		DataSource dataSource() {
 			return new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.HSQL)
-				.build();
+					.setType(EmbeddedDatabaseType.HSQL)
+					.build();
 		}
 	}
-
-
-	interface FooRepository {
-
-		List<Object> findAll();
-	}
-
 
 	@Repository
 	static class JdbcFooRepository implements FooRepository {

@@ -16,10 +16,10 @@
 
 package org.springframework.aop.support;
 
-import java.io.Serializable;
-
 import org.springframework.aop.ClassFilter;
 import org.springframework.util.Assert;
+
+import java.io.Serializable;
 
 /**
  * Simple ClassFilter implementation that passes classes (and optionally subclasses).
@@ -47,7 +47,7 @@ public class RootClassFilter implements ClassFilter, Serializable {
 	@Override
 	public boolean equals(Object other) {
 		return (this == other || (other instanceof RootClassFilter &&
-				this.clazz.equals(((RootClassFilter) other).clazz)));
+				this.clazz.equals(((RootClassFilter)other).clazz)));
 	}
 
 	@Override

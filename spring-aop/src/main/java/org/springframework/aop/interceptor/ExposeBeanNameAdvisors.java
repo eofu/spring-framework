@@ -18,7 +18,6 @@ package org.springframework.aop.interceptor;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.ProxyMethodInvocation;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
@@ -37,8 +36,8 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.beans.factory.NamedBean
+ * @since 2.0
  */
 public abstract class ExposeBeanNameAdvisors {
 
@@ -53,6 +52,7 @@ public abstract class ExposeBeanNameAdvisors {
 	 * Find the bean name for the current invocation. Assumes that an ExposeBeanNameAdvisor
 	 * has been included in the interceptor chain, and that the invocation is exposed
 	 * with ExposeInvocationInterceptor.
+	 *
 	 * @return the bean name (never {@code null})
 	 * @throws IllegalStateException if the bean name has not been exposed
 	 */
@@ -63,6 +63,7 @@ public abstract class ExposeBeanNameAdvisors {
 	/**
 	 * Find the bean name for the given invocation. Assumes that an ExposeBeanNameAdvisor
 	 * has been included in the interceptor chain.
+	 *
 	 * @param mi the MethodInvocation that should contain the bean name as an attribute
 	 * @return the bean name (never {@code null})
 	 * @throws IllegalStateException if the bean name has not been exposed
@@ -71,8 +72,8 @@ public abstract class ExposeBeanNameAdvisors {
 		if (!(mi instanceof ProxyMethodInvocation)) {
 			throw new IllegalArgumentException("MethodInvocation is not a Spring ProxyMethodInvocation: " + mi);
 		}
-		ProxyMethodInvocation pmi = (ProxyMethodInvocation) mi;
-		String beanName = (String) pmi.getUserAttribute(BEAN_NAME_ATTRIBUTE);
+		ProxyMethodInvocation pmi = (ProxyMethodInvocation)mi;
+		String beanName = (String)pmi.getUserAttribute(BEAN_NAME_ATTRIBUTE);
 		if (beanName == null) {
 			throw new IllegalStateException("Cannot get bean name; not set on MethodInvocation: " + mi);
 		}
@@ -82,6 +83,7 @@ public abstract class ExposeBeanNameAdvisors {
 	/**
 	 * Create a new advisor that will expose the given bean name,
 	 * with no introduction.
+	 *
 	 * @param beanName bean name to expose
 	 */
 	public static Advisor createAdvisorWithoutIntroduction(String beanName) {
@@ -92,6 +94,7 @@ public abstract class ExposeBeanNameAdvisors {
 	 * Create a new advisor that will expose the given bean name, introducing
 	 * the NamedBean interface to make the bean name accessible without forcing
 	 * the target object to be aware of this Spring IoC concept.
+	 *
 	 * @param beanName the bean name to expose
 	 */
 	public static Advisor createAdvisorIntroducingNamedBean(String beanName) {
@@ -116,7 +119,7 @@ public abstract class ExposeBeanNameAdvisors {
 			if (!(mi instanceof ProxyMethodInvocation)) {
 				throw new IllegalStateException("MethodInvocation is not a Spring ProxyMethodInvocation: " + mi);
 			}
-			ProxyMethodInvocation pmi = (ProxyMethodInvocation) mi;
+			ProxyMethodInvocation pmi = (ProxyMethodInvocation)mi;
 			pmi.setUserAttribute(BEAN_NAME_ATTRIBUTE, this.beanName);
 			return mi.proceed();
 		}
@@ -141,7 +144,7 @@ public abstract class ExposeBeanNameAdvisors {
 			if (!(mi instanceof ProxyMethodInvocation)) {
 				throw new IllegalStateException("MethodInvocation is not a Spring ProxyMethodInvocation: " + mi);
 			}
-			ProxyMethodInvocation pmi = (ProxyMethodInvocation) mi;
+			ProxyMethodInvocation pmi = (ProxyMethodInvocation)mi;
 			pmi.setUserAttribute(BEAN_NAME_ATTRIBUTE, this.beanName);
 			return super.invoke(mi);
 		}

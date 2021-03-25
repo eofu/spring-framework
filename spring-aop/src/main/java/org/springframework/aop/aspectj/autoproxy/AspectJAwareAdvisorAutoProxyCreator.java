@@ -16,14 +16,9 @@
 
 package org.springframework.aop.aspectj.autoproxy;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import org.aopalliance.aop.Advice;
 import org.aspectj.util.PartialOrder;
 import org.aspectj.util.PartialOrder.PartialComparable;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AbstractAspectJAdvice;
 import org.springframework.aop.aspectj.AspectJPointcutAdvisor;
@@ -32,6 +27,10 @@ import org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreat
 import org.springframework.aop.interceptor.ExposeInvocationInterceptor;
 import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * {@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator}
@@ -79,8 +78,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 				result.add(pcAdvisor.getAdvisor());
 			}
 			return result;
-		}
-		else {
+		} else {
 			return super.sortAdvisors(advisors);
 		}
 	}
@@ -101,7 +99,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
 		for (Advisor advisor : candidateAdvisors) {
 			if (advisor instanceof AspectJPointcutAdvisor &&
-					((AspectJPointcutAdvisor) advisor).getAspectName().equals(beanName)) {
+					((AspectJPointcutAdvisor)advisor).getAspectName().equals(beanName)) {
 				return true;
 			}
 		}
@@ -125,7 +123,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 		@Override
 		public int compareTo(Object obj) {
-			Advisor otherAdvisor = ((PartiallyComparableAdvisorHolder) obj).advisor;
+			Advisor otherAdvisor = ((PartiallyComparableAdvisorHolder)obj).advisor;
 			return this.comparator.compare(this.advisor, otherAdvisor);
 		}
 
@@ -144,12 +142,12 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 			StringBuilder sb = new StringBuilder(ClassUtils.getShortName(advice.getClass()));
 			boolean appended = false;
 			if (this.advisor instanceof Ordered) {
-				sb.append(": order = ").append(((Ordered) this.advisor).getOrder());
+				sb.append(": order = ").append(((Ordered)this.advisor).getOrder());
 				appended = true;
 			}
 			if (advice instanceof AbstractAspectJAdvice) {
 				sb.append(!appended ? ": " : ", ");
-				AbstractAspectJAdvice ajAdvice = (AbstractAspectJAdvice) advice;
+				AbstractAspectJAdvice ajAdvice = (AbstractAspectJAdvice)advice;
 				sb.append("aspect name = ");
 				sb.append(ajAdvice.getAspectName());
 				sb.append(", declaration order = ");

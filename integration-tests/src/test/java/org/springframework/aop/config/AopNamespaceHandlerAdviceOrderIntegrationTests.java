@@ -16,16 +16,15 @@
 
 package org.springframework.aop.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -35,10 +34,50 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * AOP namespace.
  *
  * @author Sam Brannen
- * @since 5.2.7
  * @see org.springframework.aop.framework.autoproxy.AspectJAutoProxyAdviceOrderIntegrationTests
+ * @since 5.2.7
  */
 class AopNamespaceHandlerAdviceOrderIntegrationTests {
+
+	static class Echo {
+
+		Object echo(Object obj) throws Exception {
+			if (obj instanceof Exception) {
+				throw (Exception)obj;
+			}
+			return obj;
+		}
+	}
+
+	static class InvocationTrackingAspect {
+
+		List<String> invocations = new ArrayList<>();
+
+		Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+			invocations.add("around - start");
+			try {
+				return joinPoint.proceed();
+			} finally {
+				invocations.add("around - end");
+			}
+		}
+
+		void before() {
+			invocations.add("before");
+		}
+
+		void afterReturning() {
+			invocations.add("after returning");
+		}
+
+		void afterThrowing() {
+			invocations.add("after throwing");
+		}
+
+		void after() {
+			invocations.add("after");
+		}
+	}
 
 	@Nested
 	@SpringJUnitConfig(locations = "AopNamespaceHandlerAdviceOrderIntegrationTests-afterFirst.xml")
@@ -71,48 +110,6 @@ class AopNamespaceHandlerAdviceOrderIntegrationTests {
 			aspect.invocations.clear();
 			assertThatExceptionOfType(Exception.class).isThrownBy(() -> echo.echo(new Exception()));
 			assertThat(aspect.invocations).containsExactly("around - start", "before", "around - end", "after throwing", "after");
-		}
-	}
-
-
-	static class Echo {
-
-		Object echo(Object obj) throws Exception {
-			if (obj instanceof Exception) {
-				throw (Exception) obj;
-			}
-			return obj;
-		}
-	}
-
-	static class InvocationTrackingAspect {
-
-		List<String> invocations = new ArrayList<>();
-
-		Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-			invocations.add("around - start");
-			try {
-				return joinPoint.proceed();
-			}
-			finally {
-				invocations.add("around - end");
-			}
-		}
-
-		void before() {
-			invocations.add("before");
-		}
-
-		void afterReturning() {
-			invocations.add("after returning");
-		}
-
-		void afterThrowing() {
-			invocations.add("after throwing");
-		}
-
-		void after() {
-			invocations.add("after");
 		}
 	}
 

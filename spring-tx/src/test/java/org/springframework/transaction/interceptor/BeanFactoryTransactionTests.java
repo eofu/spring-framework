@@ -16,15 +16,10 @@
 
 package org.springframework.transaction.interceptor;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Map;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.aop.target.HotSwappableTargetSource;
@@ -41,6 +36,10 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.testfixture.CallCountingTransactionManager;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -69,7 +68,7 @@ public class BeanFactoryTransactionTests {
 
 	@Test
 	public void testGetsAreNotTransactionalWithProxyFactory1() {
-		ITestBean testBean = (ITestBean) factory.getBean("proxyFactory1");
+		ITestBean testBean = (ITestBean)factory.getBean("proxyFactory1");
 		assertThat(Proxy.isProxyClass(testBean.getClass())).as("testBean is a dynamic proxy").isTrue();
 		boolean condition = testBean instanceof TransactionalProxy;
 		assertThat(condition).isFalse();
@@ -79,7 +78,7 @@ public class BeanFactoryTransactionTests {
 	@Test
 	public void testGetsAreNotTransactionalWithProxyFactory2DynamicProxy() {
 		this.factory.preInstantiateSingletons();
-		ITestBean testBean = (ITestBean) factory.getBean("proxyFactory2DynamicProxy");
+		ITestBean testBean = (ITestBean)factory.getBean("proxyFactory2DynamicProxy");
 		assertThat(Proxy.isProxyClass(testBean.getClass())).as("testBean is a dynamic proxy").isTrue();
 		boolean condition = testBean instanceof TransactionalProxy;
 		assertThat(condition).isTrue();
@@ -88,7 +87,7 @@ public class BeanFactoryTransactionTests {
 
 	@Test
 	public void testGetsAreNotTransactionalWithProxyFactory2Cglib() {
-		ITestBean testBean = (ITestBean) factory.getBean("proxyFactory2Cglib");
+		ITestBean testBean = (ITestBean)factory.getBean("proxyFactory2Cglib");
 		assertThat(AopUtils.isCglibProxy(testBean)).as("testBean is CGLIB advised").isTrue();
 		boolean condition = testBean instanceof TransactionalProxy;
 		assertThat(condition).isTrue();
@@ -97,7 +96,7 @@ public class BeanFactoryTransactionTests {
 
 	@Test
 	public void testProxyFactory2Lazy() {
-		ITestBean testBean = (ITestBean) factory.getBean("proxyFactory2Lazy");
+		ITestBean testBean = (ITestBean)factory.getBean("proxyFactory2Lazy");
 		assertThat(factory.containsSingleton("target")).isFalse();
 		assertThat(testBean.getAge()).isEqualTo(666);
 		assertThat(factory.containsSingleton("target")).isTrue();
@@ -105,7 +104,7 @@ public class BeanFactoryTransactionTests {
 
 	@Test
 	public void testCglibTransactionProxyImplementsNoInterfaces() {
-		ImplementsNoInterfaces ini = (ImplementsNoInterfaces) factory.getBean("cglibNoInterfaces");
+		ImplementsNoInterfaces ini = (ImplementsNoInterfaces)factory.getBean("cglibNoInterfaces");
 		assertThat(AopUtils.isCglibProxy(ini)).as("testBean is CGLIB advised").isTrue();
 		boolean condition = ini instanceof TransactionalProxy;
 		assertThat(condition).isTrue();
@@ -122,14 +121,14 @@ public class BeanFactoryTransactionTests {
 
 	@Test
 	public void testGetsAreNotTransactionalWithProxyFactory3() {
-		ITestBean testBean = (ITestBean) factory.getBean("proxyFactory3");
+		ITestBean testBean = (ITestBean)factory.getBean("proxyFactory3");
 		boolean condition = testBean instanceof DerivedTestBean;
 		assertThat(condition).as("testBean is a full proxy").isTrue();
 		boolean condition1 = testBean instanceof TransactionalProxy;
 		assertThat(condition1).isTrue();
-		InvocationCounterPointcut txnCounter = (InvocationCounterPointcut) factory.getBean("txnInvocationCounterPointcut");
-		InvocationCounterInterceptor preCounter = (InvocationCounterInterceptor) factory.getBean("preInvocationCounterInterceptor");
-		InvocationCounterInterceptor postCounter = (InvocationCounterInterceptor) factory.getBean("postInvocationCounterInterceptor");
+		InvocationCounterPointcut txnCounter = (InvocationCounterPointcut)factory.getBean("txnInvocationCounterPointcut");
+		InvocationCounterInterceptor preCounter = (InvocationCounterInterceptor)factory.getBean("preInvocationCounterInterceptor");
+		InvocationCounterInterceptor postCounter = (InvocationCounterInterceptor)factory.getBean("postInvocationCounterInterceptor");
 		txnCounter.counter = 0;
 		preCounter.counter = 0;
 		postCounter.counter = 0;
@@ -154,6 +153,7 @@ public class BeanFactoryTransactionTests {
 		final TransactionStatus ts = mock(TransactionStatus.class);
 		ptm = new PlatformTransactionManager() {
 			private boolean invoked;
+
 			@Override
 			public TransactionStatus getTransaction(@Nullable TransactionDefinition def) throws TransactionException {
 				if (invoked) {
@@ -166,10 +166,12 @@ public class BeanFactoryTransactionTests {
 				}
 				return ts;
 			}
+
 			@Override
 			public void commit(TransactionStatus status) throws TransactionException {
 				assertThat(status == ts).isTrue();
 			}
+
 			@Override
 			public void rollback(TransactionStatus status) throws TransactionException {
 				throw new IllegalStateException("rollback should not get invoked");
@@ -195,9 +197,9 @@ public class BeanFactoryTransactionTests {
 	@Test
 	public void testNoTransactionAttributeSource() {
 		assertThatExceptionOfType(FatalBeanException.class).isThrownBy(() -> {
-				DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
-				new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new ClassPathResource("noTransactionAttributeSource.xml", getClass()));
-				bf.getBean("noTransactionAttributeSource");
+			DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
+			new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new ClassPathResource("noTransactionAttributeSource.xml", getClass()));
+			bf.getBean("noTransactionAttributeSource");
 		});
 	}
 
@@ -210,7 +212,7 @@ public class BeanFactoryTransactionTests {
 		CallCountingTransactionManager txMan = new CallCountingTransactionManager();
 		PlatformTransactionManagerFacade.delegate = txMan;
 
-		TestBean tb = (TestBean) factory.getBean("hotSwapped");
+		TestBean tb = (TestBean)factory.getBean("hotSwapped");
 		assertThat(tb.getAge()).isEqualTo(666);
 		int newAge = 557;
 		tb.setAge(newAge);
@@ -218,7 +220,7 @@ public class BeanFactoryTransactionTests {
 
 		TestBean target2 = new TestBean();
 		target2.setAge(65);
-		HotSwappableTargetSource ts = (HotSwappableTargetSource) factory.getBean("swapper");
+		HotSwappableTargetSource ts = (HotSwappableTargetSource)factory.getBean("swapper");
 		ts.swap(target2);
 		assertThat(tb.getAge()).isEqualTo(target2.getAge());
 		tb.setAge(newAge);

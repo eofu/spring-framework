@@ -16,11 +16,10 @@
 
 package org.springframework.transaction.interceptor;
 
-import java.lang.reflect.Method;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.transaction.TransactionDefinition;
+
+import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -42,7 +41,7 @@ public class TransactionAttributeSourceEditorTests {
 	@Test
 	public void nullValue() throws Exception {
 		editor.setAsText(null);
-		TransactionAttributeSource tas = (TransactionAttributeSource) editor.getValue();
+		TransactionAttributeSource tas = (TransactionAttributeSource)editor.getValue();
 
 		Method m = Object.class.getMethod("hashCode");
 		assertThat(tas.getTransactionAttribute(m, null)).isNull();
@@ -57,12 +56,12 @@ public class TransactionAttributeSourceEditorTests {
 	@Test
 	public void matchesSpecific() throws Exception {
 		editor.setAsText(
-			"java.lang.Object.hashCode=PROPAGATION_REQUIRED\n" +
-			"java.lang.Object.equals=PROPAGATION_MANDATORY\n" +
-			"java.lang.Object.*it=PROPAGATION_SUPPORTS\n" +
-			"java.lang.Object.notify=PROPAGATION_SUPPORTS\n" +
-			"java.lang.Object.not*=PROPAGATION_REQUIRED");
-		TransactionAttributeSource tas = (TransactionAttributeSource) editor.getValue();
+				"java.lang.Object.hashCode=PROPAGATION_REQUIRED\n" +
+						"java.lang.Object.equals=PROPAGATION_MANDATORY\n" +
+						"java.lang.Object.*it=PROPAGATION_SUPPORTS\n" +
+						"java.lang.Object.notify=PROPAGATION_SUPPORTS\n" +
+						"java.lang.Object.not*=PROPAGATION_REQUIRED");
+		TransactionAttributeSource tas = (TransactionAttributeSource)editor.getValue();
 
 		checkTransactionProperties(tas, Object.class.getMethod("hashCode"),
 				TransactionDefinition.PROPAGATION_REQUIRED);
@@ -84,7 +83,7 @@ public class TransactionAttributeSourceEditorTests {
 	@Test
 	public void matchesAll() throws Exception {
 		editor.setAsText("java.lang.Object.*=PROPAGATION_REQUIRED");
-		TransactionAttributeSource tas = (TransactionAttributeSource) editor.getValue();
+		TransactionAttributeSource tas = (TransactionAttributeSource)editor.getValue();
 
 		checkTransactionProperties(tas, Object.class.getMethod("hashCode"),
 				TransactionDefinition.PROPAGATION_REQUIRED);
@@ -110,8 +109,7 @@ public class TransactionAttributeSourceEditorTests {
 			assertThat(ta).isNotNull();
 			assertThat(ta.getIsolationLevel()).isEqualTo(TransactionDefinition.ISOLATION_DEFAULT);
 			assertThat(ta.getPropagationBehavior()).isEqualTo(propagationBehavior);
-		}
-		else {
+		} else {
 			assertThat(ta).isNull();
 		}
 	}

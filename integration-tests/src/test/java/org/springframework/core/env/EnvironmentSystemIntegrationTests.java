@@ -16,30 +16,16 @@
 
 package org.springframework.core.env;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jca.context.ResourceAdapterApplicationContext;
 import org.springframework.jca.support.SimpleBootstrapContext;
@@ -50,26 +36,16 @@ import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AbstractRefreshableWebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.context.support.StandardServletEnvironment;
-import org.springframework.web.context.support.StaticWebApplicationContext;
-import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.context.support.*;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.rootBeanDefinition;
 import static org.springframework.context.ConfigurableApplicationContext.ENVIRONMENT_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.DERIVED_DEV_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.DERIVED_DEV_ENV_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.DEV_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.DEV_ENV_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.ENVIRONMENT_AWARE_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.PROD_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.PROD_ENV_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.TRANSITIVE_BEAN_NAME;
-import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.XML_PATH;
+import static org.springframework.core.env.EnvironmentSystemIntegrationTests.Constants.*;
 
 /**
  * System integration tests for container support of the {@link Environment} API.
@@ -207,7 +183,7 @@ public class EnvironmentSystemIntegrationTests {
 
 		// strange - FSXAC strips leading '/' unless prefixed with 'file:'
 		ConfigurableApplicationContext ctx =
-				new FileSystemXmlApplicationContext(new String[] {"file:" + tmpFile.getPath()}, false);
+				new FileSystemXmlApplicationContext(new String[]{"file:" + tmpFile.getPath()}, false);
 		ctx.setEnvironment(prodEnv);
 		ctx.refresh();
 		assertEnvironmentBeanRegistered(ctx);

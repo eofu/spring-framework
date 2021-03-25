@@ -16,9 +16,9 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.util.List;
-
 import org.springframework.beans.factory.FactoryBean;
+
+import java.util.List;
 
 public class ComponentFactoryBean implements FactoryBean<Component> {
 

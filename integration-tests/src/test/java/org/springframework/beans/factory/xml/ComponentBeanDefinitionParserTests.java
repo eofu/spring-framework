@@ -16,16 +16,15 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.util.List;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +40,7 @@ class ComponentBeanDefinitionParserTests {
 	@BeforeAll
 	void setUp() throws Exception {
 		new XmlBeanDefinitionReader(bf).loadBeanDefinitions(
-			new ClassPathResource("component-config.xml", ComponentBeanDefinitionParserTests.class));
+				new ClassPathResource("component-config.xml", ComponentBeanDefinitionParserTests.class));
 	}
 
 	@AfterAll

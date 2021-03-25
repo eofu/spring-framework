@@ -16,13 +16,13 @@
 
 package org.springframework.transaction.support;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.lang.Nullable;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A simple transaction-backed {@link Scope} implementation, delegating to
@@ -35,16 +35,16 @@ import org.springframework.lang.Nullable;
  * or through a {@link org.springframework.beans.factory.config.CustomScopeConfigurer} bean.
  *
  * @author Juergen Hoeller
- * @since 4.2
  * @see org.springframework.context.support.SimpleThreadScope
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#registerScope
  * @see org.springframework.beans.factory.config.CustomScopeConfigurer
+ * @since 4.2
  */
 public class SimpleTransactionScope implements Scope {
 
 	@Override
 	public Object get(String name, ObjectFactory<?> objectFactory) {
-		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder) TransactionSynchronizationManager.getResource(this);
+		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder)TransactionSynchronizationManager.getResource(this);
 		if (scopedObjects == null) {
 			scopedObjects = new ScopedObjectsHolder();
 			TransactionSynchronizationManager.registerSynchronization(new CleanupSynchronization(scopedObjects));
@@ -63,19 +63,18 @@ public class SimpleTransactionScope implements Scope {
 	@Override
 	@Nullable
 	public Object remove(String name) {
-		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder) TransactionSynchronizationManager.getResource(this);
+		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder)TransactionSynchronizationManager.getResource(this);
 		if (scopedObjects != null) {
 			scopedObjects.destructionCallbacks.remove(name);
 			return scopedObjects.scopedInstances.remove(name);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	@Override
 	public void registerDestructionCallback(String name, Runnable callback) {
-		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder) TransactionSynchronizationManager.getResource(this);
+		ScopedObjectsHolder scopedObjects = (ScopedObjectsHolder)TransactionSynchronizationManager.getResource(this);
 		if (scopedObjects != null) {
 			scopedObjects.destructionCallbacks.put(name, callback);
 		}

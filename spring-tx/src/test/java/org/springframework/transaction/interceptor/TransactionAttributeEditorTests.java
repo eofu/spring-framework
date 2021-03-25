@@ -17,11 +17,10 @@
 package org.springframework.transaction.interceptor;
 
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.transaction.TransactionDefinition;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -40,7 +39,7 @@ public class TransactionAttributeEditorTests {
 	public void testNull() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText(null);
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta == null).isTrue();
 	}
 
@@ -48,7 +47,7 @@ public class TransactionAttributeEditorTests {
 	public void testEmptyString() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText("");
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta == null).isTrue();
 	}
 
@@ -56,7 +55,7 @@ public class TransactionAttributeEditorTests {
 	public void testValidPropagationCodeOnly() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText("PROPAGATION_REQUIRED");
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta != null).isTrue();
 		assertThat(ta.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED).isTrue();
 		assertThat(ta.getIsolationLevel() == TransactionDefinition.ISOLATION_DEFAULT).isTrue();
@@ -76,7 +75,7 @@ public class TransactionAttributeEditorTests {
 	public void testValidPropagationCodeAndIsolationCode() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText("PROPAGATION_REQUIRED, ISOLATION_READ_UNCOMMITTED");
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta != null).isTrue();
 		assertThat(ta.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED).isTrue();
 		assertThat(ta.getIsolationLevel() == TransactionDefinition.ISOLATION_READ_UNCOMMITTED).isTrue();
@@ -94,7 +93,7 @@ public class TransactionAttributeEditorTests {
 	public void testValidPropagationCodeAndIsolationCodeAndRollbackRules1() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText("PROPAGATION_MANDATORY,ISOLATION_REPEATABLE_READ,timeout_10,-IOException,+MyRuntimeException");
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta).isNotNull();
 		assertThat(ta.getPropagationBehavior()).isEqualTo(TransactionDefinition.PROPAGATION_MANDATORY);
 		assertThat(ta.getIsolationLevel()).isEqualTo(TransactionDefinition.ISOLATION_REPEATABLE_READ);
@@ -112,7 +111,7 @@ public class TransactionAttributeEditorTests {
 	public void testValidPropagationCodeAndIsolationCodeAndRollbackRules2() {
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText("+IOException,readOnly,ISOLATION_READ_COMMITTED,-MyRuntimeException,PROPAGATION_SUPPORTS");
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(ta).isNotNull();
 		assertThat(ta.getPropagationBehavior()).isEqualTo(TransactionDefinition.PROPAGATION_SUPPORTS);
 		assertThat(ta.getIsolationLevel()).isEqualTo(TransactionDefinition.ISOLATION_READ_COMMITTED);
@@ -135,7 +134,7 @@ public class TransactionAttributeEditorTests {
 
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText(source.toString());
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(source).isEqualTo(ta);
 		assertThat(ta.getPropagationBehavior()).isEqualTo(TransactionDefinition.PROPAGATION_SUPPORTS);
 		assertThat(ta.getIsolationLevel()).isEqualTo(TransactionDefinition.ISOLATION_REPEATABLE_READ);
@@ -162,7 +161,7 @@ public class TransactionAttributeEditorTests {
 
 		TransactionAttributeEditor pe = new TransactionAttributeEditor();
 		pe.setAsText(source.toString());
-		TransactionAttribute ta = (TransactionAttribute) pe.getValue();
+		TransactionAttribute ta = (TransactionAttribute)pe.getValue();
 		assertThat(source).isEqualTo(ta);
 		assertThat(ta.getPropagationBehavior()).isEqualTo(TransactionDefinition.PROPAGATION_SUPPORTS);
 		assertThat(ta.getIsolationLevel()).isEqualTo(TransactionDefinition.ISOLATION_REPEATABLE_READ);

@@ -16,11 +16,8 @@
 
 package org.springframework.scheduling.annotation;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.BeanCreationException;
@@ -36,6 +33,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.testfixture.CallCountingTransactionManager;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -60,8 +59,8 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 		ctx.register(Config.class, JdkProxyTxConfig.class, RepoConfigA.class);
 		assertThatExceptionOfType(BeanCreationException.class)
-			.isThrownBy(ctx::refresh)
-			.withCauseInstanceOf(IllegalStateException.class);
+				.isThrownBy(ctx::refresh)
+				.withCauseInstanceOf(IllegalStateException.class);
 	}
 
 	@Test
@@ -108,17 +107,28 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 	}
 
 
+	public interface MyRepository {
+
+		int getInvocationCount();
+	}
+
+
+	public interface MyRepositoryWithScheduledMethod {
+
+		int getInvocationCount();
+
+		void scheduled();
+	}
+
 	@Configuration
 	@EnableTransactionManagement
 	static class JdkProxyTxConfig {
 	}
 
-
 	@Configuration
 	@EnableTransactionManagement(proxyTargetClass = true)
 	static class SubclassProxyTxConfig {
 	}
-
 
 	@Configuration
 	static class RepoConfigA {
@@ -129,7 +139,6 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 		}
 	}
 
-
 	@Configuration
 	static class RepoConfigB {
 
@@ -139,10 +148,14 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 		}
 	}
 
-
 	@Configuration
 	@EnableScheduling
 	static class Config {
+
+		@Bean
+		static PersistenceExceptionTranslationPostProcessor peTranslationPostProcessor() {
+			return new PersistenceExceptionTranslationPostProcessor();
+		}
 
 		@Bean
 		PlatformTransactionManager txManager() {
@@ -153,13 +166,7 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 		PersistenceExceptionTranslator peTranslator() {
 			return mock(PersistenceExceptionTranslator.class);
 		}
-
-		@Bean
-		static PersistenceExceptionTranslationPostProcessor peTranslationPostProcessor() {
-			return new PersistenceExceptionTranslationPostProcessor();
-		}
 	}
-
 
 	@Configuration
 	@EnableScheduling
@@ -178,7 +185,6 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 		}
 	}
 
-
 	@Aspect
 	public static class MyAspect {
 
@@ -189,13 +195,6 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 			this.count.incrementAndGet();
 		}
 	}
-
-
-	public interface MyRepository {
-
-		int getInvocationCount();
-	}
-
 
 	@Repository
 	static class MyRepositoryImpl implements MyRepository {
@@ -213,15 +212,6 @@ class ScheduledAndTransactionalAnnotationIntegrationTests {
 			return this.count.get();
 		}
 	}
-
-
-	public interface MyRepositoryWithScheduledMethod {
-
-		int getInvocationCount();
-
-		void scheduled();
-	}
-
 
 	@Repository
 	static class MyRepositoryWithScheduledMethodImpl implements MyRepositoryWithScheduledMethod {
